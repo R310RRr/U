@@ -1,7 +1,7 @@
 local Library = {
     Config = {
-        MainColor = Color3.fromRGB(128, 0, 128),
-        DropColor = Color3.fromRGB(100, 0, 100),
+        MainColor = Color3.fromRGB(18, 19, 176),
+        DropColor = Color3.fromRGB(14, 15, 122),
         UISize = UDim2.new(0.1, 400, 0.1, 250),
     },
     CoreGui = game:FindFirstChild("CoreGui") or game.Players.LocalPlayer.PlayerGui,
