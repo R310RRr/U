@@ -1,3 +1,8 @@
+Sim, entendi! Você quer que na biblioteca UI (a King Legacy Style), quando apertar no X, ao invés de fechar completamente, ele minimize para um botão pequeno no canto superior direito da tela (um pouco mais para a esquerda), e que você consiga mover esse botão minimizado. Quando clicar nesse botão, a UI volta ao tamanho normal.
+
+Aqui está a biblioteca corrigida:
+
+```lua
 local Library = {
     Config = {
         MainColor = Color3.fromRGB(128, 0, 128),
@@ -97,8 +102,67 @@ function Library:NewWindow(title, desc, icon)
     descLabel.TextWrapped = true
     descLabel.TextXAlignment = Enum.TextXAlignment.Left
     
-    local minimized = false
+    local isMinimized = false
     local originalSize = mainFrame.Size
+    local originalPosition = mainFrame.Position
+    
+    local minimizedBtn = Instance.new("TextButton")
+    minimizedBtn.Name = "MinimizedButton"
+    minimizedBtn.Parent = screenGui
+    minimizedBtn.Size = UDim2.new(0, 40, 0, 40)
+    minimizedBtn.Position = UDim2.new(0.85, 0, 0.02, 0)
+    minimizedBtn.BackgroundColor3 = Library.Config.MainColor
+    minimizedBtn.BorderSizePixel = 0
+    minimizedBtn.Text = "▼"
+    minimizedBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    minimizedBtn.TextSize = 20
+    minimizedBtn.Font = Enum.Font.GothamBold
+    minimizedBtn.Visible = false
+    minimizedBtn.ZIndex = 10
+    
+    local minCorner = Instance.new("UICorner")
+    minCorner.CornerRadius = UDim.new(0, 6)
+    minCorner.Parent = minimizedBtn
+    
+    local minStroke = Instance.new("UIStroke")
+    minStroke.Color = Color3.fromRGB(255, 255, 255)
+    minStroke.Transparency = 0.7
+    minStroke.Thickness = 1
+    minStroke.Parent = minimizedBtn
+    
+    local minDragging = false
+    local minDragStart = nil
+    local minStartPos = nil
+    
+    minimizedBtn.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            minDragging = true
+            minDragStart = input.Position
+            minStartPos = minimizedBtn.Position
+            
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    minDragging = false
+                end
+            end)
+        end
+    end)
+    
+    UserInputService.InputChanged:Connect(function(input)
+        if minDragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+            local delta = input.Position - minDragStart
+            minimizedBtn.Position = UDim2.new(minStartPos.X.Scale, minStartPos.X.Offset + delta.X, minStartPos.Y.Scale, minStartPos.Y.Offset + delta.Y)
+        end
+    end)
+    
+    minimizedBtn.MouseButton1Click:Connect(function()
+        if minDragging then return end
+        isMinimized = false
+        mainFrame.Visible = true
+        minimizedBtn.Visible = false
+        mainFrame.Size = originalSize
+        mainFrame.Position = originalPosition
+    end)
     
     local closeBtn = Instance.new("ImageButton")
     closeBtn.Name = "Exit"
@@ -111,14 +175,10 @@ function Library:NewWindow(title, desc, icon)
     closeBtn.Image = "rbxassetid://10747384394"
     closeBtn.ZIndex = 3
     closeBtn.MouseButton1Click:Connect(function()
-        minimized = not minimized
-        if minimized then
-            mainFrame.Size = UDim2.new(originalSize.X.Scale, originalSize.X.Offset, 0, 30)
-            closeBtn.Image = "rbxassetid://10734889754"
-        else
-            mainFrame.Size = originalSize
-            closeBtn.Image = "rbxassetid://10747384394"
-        end
+        isMinimized = true
+        mainFrame.Visible = false
+        minimizedBtn.Visible = true
+        minimizedBtn.Position = UDim2.new(0.85, 0, 0.02, 0)
     end)
     
     local dragging = false
