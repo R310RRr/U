@@ -1,8 +1,3 @@
-Sim, entendi! Você quer que na biblioteca UI (a King Legacy Style), quando apertar no X, ao invés de fechar completamente, ele minimize para um botão pequeno no canto superior direito da tela (um pouco mais para a esquerda), e que você consiga mover esse botão minimizado. Quando clicar nesse botão, a UI volta ao tamanho normal.
-
-Aqui está a biblioteca corrigida:
-
-```lua
 local Library = {
     Config = {
         MainColor = Color3.fromRGB(128, 0, 128),
