@@ -1,4 +1,3 @@
-```lua
 local Library = {
     Config = {
         MainColor = Color3.fromRGB(128, 0, 128),
