@@ -1,6 +1,3 @@
-Sim, vai funcionar perfeitamente! Aqui está a biblioteca completa corrigida:
-
-```lua
 local Library = {
     Config = {
         MainColor = Color3.fromRGB(128, 0, 128),
