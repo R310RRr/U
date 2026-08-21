@@ -1,6 +1,3 @@
--- UI Library - King Legacy Style
--- Salve este arquivo como UI_Library.lua no GitHub
-
 local Library = {
     Config = {
         MainColor = Color3.fromRGB(128, 0, 128),
